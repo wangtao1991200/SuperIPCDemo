@@ -1,0 +1,14 @@
+//
+//  PrefixHeader.pch
+//  test3
+//
+//  Created by khj888 on 2020/2/21.
+//  Copyright © 2020 fenzhi. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+#define WeakSelf __weak typeof(self) weakSelf = self;
+
+#endif /* PrefixHeader_pch */
