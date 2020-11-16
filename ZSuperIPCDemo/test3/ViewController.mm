@@ -483,13 +483,13 @@ void OnSetAlarmCmdResult(int cmd,const char*uuid,const char*json)
     dispatch_async(dispatch_get_main_queue(), ^{
     NSLog(@"onStatus uuid:%@ status:%d",uuid,status);
     switch (status) {
-       case 0:{
+       case ERROR_SEP2P_SESSION_CLOSED_CALLED:{
            [self->statusLabel setText:@"online"];
         }break;
-        case 2:{
+        case ERROR_SEP2P_SESSION_CLOSED_TIMEOUT:{
             [self->statusLabel setText:@"timeout"];
         }break;
-        case 3:{
+        case ERROR_SEP2P_INVALID_ID:{
             [self->statusLabel setText:@"INVALID ID"];
         }break;
         default:
