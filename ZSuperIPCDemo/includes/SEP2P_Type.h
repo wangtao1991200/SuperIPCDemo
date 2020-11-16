@@ -1,11 +1,6 @@
 #ifndef __INCLUDED_TYPE_DEFINE____H
 #define __INCLUDED_TYPE_DEFINE____H
 
-#if __APPLE__
-typedef long long INT64;
-typedef unsigned long long UINT64;
-#else
-#endif
 //#if defined WIN32DLL || defined LINUX
 typedef int INT32;
 typedef unsigned int UINT32;

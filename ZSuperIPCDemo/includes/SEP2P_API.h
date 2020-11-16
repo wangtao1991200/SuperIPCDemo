@@ -28,10 +28,6 @@ extern "C" {
 #endif // __cplusplus
 
 
-#ifndef USER_MANAGER_ACCESS_VERSION_20200420
-#define USER_MANAGER_ACCESS_VERSION_20200420 20200420
-#endif
-
 typedef struct{	
 	CHAR bFlagInternet;		// Internet Reachable? 1: YES, 0: NO
 	CHAR bFlagHostResolved;	// P2P Server IP resolved? 1: YES, 0: NO
@@ -108,8 +104,6 @@ auth:uint32_t
 
 #define USER_AUTH_DEV_ACCESS				0x200 //连接，浏览
 #define USER_AUTH_DEV_OVERWRITE				0x400 //控制设置
-#define USER_AUTH_DEV_MODIFY_ALIAS			0x800 //控制设置
-#define USER_AUTH_DEV_MODIFY_VALID_TIME		0x1000 //控制设置
 
 enum{
 	USR_MANAGER_ADD_USER=0,
@@ -130,27 +124,15 @@ enum{
 
 
 	USR_MANAGER_LOGIN,
-
-	USR_MANAGER_MODIFY_DEV_ALIAS,
-
-	USR_MANAGER_LOGOUT,
-
-	USR_MANAGER_MODIFY_DEV_TIPS,//16
-	USR_MANAGER_MODIFY_DEV_VALID_TIME,//17
 };
 
-typedef void*(*simple_callback_t)(UINT32, int,const char*);
+typedef void*(*simple_callback_t)(int,const char*);
 SEP2P_API_API INT32 SEP2P_Login(CHAR *username,CHAR*passwd,CHAR*addr,simple_callback_t callback);
-SEP2P_API_API INT32 SEP2P_Logout(CHAR *username,CHAR*addr,simple_callback_t callback);
-SEP2P_API_API UINT32 SEP2P_GetServerVersion(void);
 SEP2P_API_API INT32 SEP2P_AddUser(CHAR *username,CHAR*passwd,UINT32 auth,CHAR*parent,CHAR*key,simple_callback_t callback);
 SEP2P_API_API INT32 SEP2P_DelUser(CHAR *username,CHAR*passwd,CHAR*parent,CHAR*key,simple_callback_t callback);
-//forbid is boolean,0 or 1
 SEP2P_API_API INT32 SEP2P_ForbidUser(CHAR *username,int forbid,simple_callback_t callback);
 SEP2P_API_API INT32 SEP2P_GetUserInfo(CHAR *username,simple_callback_t callback);
-//cnt<255, if total count is more than 255, use start to index the transfer number
 SEP2P_API_API INT32 SEP2P_GetUserList(CHAR *username,int start,int cnt,simple_callback_t callback);
-//cnt<255, if total count is more than 255, use start to index the transfer number
 SEP2P_API_API INT32 SEP2P_GetDevList(CHAR *username,int start,int cnt,simple_callback_t callback);
 SEP2P_API_API INT32 SEP2P_AddDevToUser(CHAR *username,int count,const char*devlist,int len,simple_callback_t callback);
 SEP2P_API_API INT32 SEP2P_DelDevFromUser(CHAR *username,int count,const char*devlist,int len,simple_callback_t callback);
@@ -162,10 +144,6 @@ SEP2P_API_API INT32 SEP2P_DelDev(CHAR *username,CHAR*key,const char*devlistjson,
 SEP2P_API_API INT32 SEP2P_ForbidDev(CHAR *username,const char*devlistjson,simple_callback_t callback);
 
 SEP2P_API_API INT32 SEP2P_ModifyDevAlias(CHAR *uuid,const char*alias,simple_callback_t callback);
-
-SEP2P_API_API INT32 SEP2P_ModifyDevTips(CHAR *uuid,const char*tips,simple_callback_t callback);
-#define MAX_EXPIRATION_TIME 299912302359ULL //2999/12/30 23:59
-SEP2P_API_API INT32 SEP2P_SetDevExpirationTime(CHAR *username, CHAR *uuid,UINT64 expireTime,simple_callback_t callback);
 
 #ifdef __cplusplus
 }

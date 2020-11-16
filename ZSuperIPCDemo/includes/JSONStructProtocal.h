@@ -28,6 +28,9 @@ typedef unsigned long long        T_U64;
 typedef int BOOL;
 #endif
 
+#ifndef MAX_PATH
+#define MAX_PATH 260
+#endif
 typedef enum{
 	IPCNET_LOGIN_REQ = 1000,
 	IPCNET_LOGIN_RESP,
@@ -125,17 +128,17 @@ typedef enum{
 	IPCNET_UPGRADE_REQ = 1080,
 	IPCNET_UPGRADE_RESP,
 
-	IPCNET_GET_GPIO_REQ = 1082,
-	IPCNET_GET_GPIO_RESP,
+	IPCNET_TRANS_FILE_START_REQ = 1082, //IPCNET_GET_GPIO_REQ = 1082,
+	IPCNET_TRANS_FILE_START_RESP, //IPCNET_GET_GPIO_RESP,
 	
-	IPCNET_SET_GPIO_REQ = 1084,
-	IPCNET_SET_GPIO_RESP,
+	IPCNET_PUT_FILE_DATA = 1084, //IPCNET_SET_GPIO_REQ = 1084,
+	IPCNET_PUT_FILE_DATA_RESP, //IPCNET_SET_GPIO_RESP,
 
-	IPCNET_GET_SUBDEV_REQ = 1086,
-	IPCNET_GET_SUBDEV_RESP,
+	IPCNET_GET_FILE_DATA = 1086,//IPCNET_GET_SUBDEV_REQ = 1086,
+	IPCNET_GET_FILE_DATA_RESP, //IPCNET_GET_SUBDEV_RESP,
 	
-	IPCNET_SET_SUBDEV_REQ = 1088,
-	IPCNET_SET_SUBDEV_RESP,
+	IPCNET_SET_HOTKEY_REQ = 1088, //IPCNetHotKey_st
+	IPCNET_SET_HOTKEY_RESP,
 
 	IPCNET_GET_BUS_REQ = 1090,
 	IPCNET_GET_BUS_RESP,
@@ -436,7 +439,9 @@ typedef enum{
     IPCNET_SET_TIMEZONE_CFG_REQ = 1545, //时区、夏令时 IPCNetTimeZoneCfg_st
     IPCNET_SET_TIMEZONE_CFG_RESP,
 
-    
+    IPCNET_DEV_STATUS_REQ = 1547, //{"target":{}}, use IPCNET_DEV_STATUS_REPORT to return target's status
+    IPCNET_DEV_STATUS_REPORT,//target maybe the list_all, this will return all the status name support by the device
+
     
     //---------------这里以下主要是sdk协议的扩展，不作网络协议----------
     IPCNET_INTERNEL_MSG_TYPE = 3000,
@@ -987,6 +992,18 @@ typedef struct RecTime{
 	String Ed2;
 }RecTime_st;
 
+typedef enum
+{
+    RECORD_PACKAGE_2MIN,
+    RECORD_PACKAGE_5MIN,
+    RECORD_PACKAGE_10MIN,
+    RECORD_PACKAGE_15MIN,
+    RECORD_PACKAGE_20MIN,
+    RECORD_PACKAGE_25MIN,
+    RECORD_PACKAGE_30MIN,
+    RECORD_PACKAGE_1HOUR,
+    RECORD_PACKAGE_CUSTOMIZED,
+}DEV_RECORD_PACKAGE_TIME_e;
 //VeCh: record main(0) stream or sub(1) stream
 //RecMins: record duration, please pick up one of the time from the RecMinsOption in the json struct feedback from OnCmdResult_t which can trigger by IPCNetGetRecordR
 //ReserveSize:how many disk size would you want to reserve
@@ -1000,9 +1017,10 @@ typedef struct IPCNetRecordCfg{
 	int RecMinsOptionNum;
 	int RecMinsOption[32];
 	int RecMins;//set with index of RecMinsOption
+	int RecCustomizeLong;
 	int Mode;//0:auto mode 1:manual mode
 	Boolean_t AutoDel;
-	RecTime_st *RecTime[8];//0:every day 1:Monday 2:Tuesday
+	RecTime_st *RecTime[8];//0:every day 1:Monday 2:Tuesday...7:Sunday
 	int PackageType;
 	int ReserveSize;
 	IPCNetRecordCfg(){
@@ -1034,7 +1052,7 @@ typedef struct IPCNetRecordCfg{
 				newProtocal=1;
 			}
 			jsroot->getInt("Mode",Mode);
-
+			Log("newProtocal:%d Mode:%d", newProtocal,Mode);
 			JSONObject *jsDiskInfo=jsroot->getJSONObject("DiskInfo");
 			if(jsDiskInfo){
 				jsDiskInfo->getInt("Free",value);
@@ -1082,11 +1100,12 @@ typedef struct IPCNetRecordCfg{
 						if(newProtocal ==1){
 							int day=0;
 							if(jsRt->getInt("Day",day)==1){
-								if(day<7){
+								if(day<8){
 									int j;
 									RecTime_st *tm = RecTime[day];
 									tm->Day = day;
 									jsRt->getInt("PeriodMaxCnt",tm->PeriodMaxCnt);
+									jsRt->getBoolean("Enable",tm->Enable);
 									tm->Enable = 0;
 									JSONArray*jsPeriod = jsRt->getJSONArray("Period");
 									if(jsPeriod){
@@ -1130,6 +1149,7 @@ typedef struct IPCNetRecordCfg{
 		if(newProtocal==1){
 			jresult.put("Vi", ViCh);
 			jresult.put("Ch", VeCh);
+			jresult.put("Enable",Enable);
 		}else{
 			jresult.put("ViCh", ViCh);
 			jresult.put("VeCh", VeCh);
@@ -1151,8 +1171,9 @@ typedef struct IPCNetRecordCfg{
 		for(i=0;i<8;i++){
 			JSONObject jsRt;
 			if(newProtocal==1){
-				if(RecTime[i]->Enable==1){
+				//if(RecTime[i]->Enable==1){
 					jsRt.put("Day", i);
+					jsRt.put("Enable", Enable);
 					JSONArray jsPeriod;
 					int j=0;
 					for(list<IPCNetPeriod_st*>::iterator it= RecTime[i]->Period.begin(); it!=RecTime[i]->Period.end(); it++){
@@ -1162,16 +1183,19 @@ typedef struct IPCNetRecordCfg{
 						jsPer.put("End", rfi->End);
 						jsPeriod.put(j++, jsPer);
 					}
+					
 					jsRt.put("Period", jsPeriod);
-				}
+
+					jsaRecTime.put(i,jsRt);
+				//}
 			}else{
 				jsRt.put("En",RecTime[i]->En);
 				jsRt.put("St1",RecTime[i]->St1);
 				jsRt.put("Ed1",RecTime[i]->Ed1);
 				jsRt.put("St2",RecTime[i]->St2);
 				jsRt.put("Ed2",RecTime[i]->Ed2);
+				jsaRecTime.put(i,jsRt);
 			}
-			jsaRecTime.put(i,jsRt);
 		}
 		jresult.put("RecTime",jsaRecTime);
 				
@@ -1226,6 +1250,7 @@ typedef struct IPCNetWirelessConfig{
 #define IPCNET_WIFI_CTRL_DEL 1
 #define IPCNET_WIFI_CTRL_MODIFY 2
 #define IPCNET_WIFI_CTRL_CHG_PWD 3
+#define IPCNET_WIFI_CTRL_FORCE_SETUP 4
 	int Ctrl;//use to indicate what operation it is
 
 	Boolean_t WirelessEnable;
@@ -1271,7 +1296,7 @@ typedef struct IPCNetWirelessConfig{
 		
 		JSONObject jsresult;// = new JSONObject();
 		jsresult.put("WirelessEnable", WirelessEnable);
-		if(Ctrl<0 || Ctrl==IPCNET_WIFI_CTRL_MODIFY) {
+		if(Ctrl<0 || Ctrl==IPCNET_WIFI_CTRL_MODIFY || Ctrl == IPCNET_WIFI_CTRL_FORCE_SETUP) {
 			jsresult.put("WirelessStatus", WirelessStatus);
 			jsresult.put("SsidSetMode", SsidSetMode);
 			jsresult.put("EncType", EncType);
@@ -2203,7 +2228,7 @@ typedef struct IPCNetVideoEncodeCfg{
 			jsresult.put("VideoEncodeNum", VideoEncodeNum);
 			JSONArray jaVideoEncode;
 			int i=0;
-			for(list<IPCNetVideoEncode_st*>::iterator it= VideoEncode.begin(); it!=VideoEncode.end(); ){
+			for(list<IPCNetVideoEncode_st*>::iterator it= VideoEncode.begin(); it!=VideoEncode.end(); it++){
 				IPCNetVideoEncode_st *venc = *it;
 				JSONObject jsVideoEncode;
 				jsVideoEncode.put("EncCh",venc->EncCh);
@@ -2215,7 +2240,7 @@ typedef struct IPCNetVideoEncodeCfg{
 				
 				JSONArray jaVideoResolutionOpt;
 				int j=0;
-				for(list<IPCNetVideoResolutionOpt_st*>::iterator it= venc->VideoResolutionOpt.begin(); it!=venc->VideoResolutionOpt.end(); ){
+				for(list<IPCNetVideoResolutionOpt_st*>::iterator it= venc->VideoResolutionOpt.begin(); it!=venc->VideoResolutionOpt.end(); it++){
 					IPCNetVideoResolutionOpt_st *resl = *it;
 					JSONObject jsvro;
 					jsvro.put("Witdh", resl->Witdh);
@@ -2418,7 +2443,7 @@ typedef struct{
 }IPCNetMdArea_st;
 typedef struct{
     int Vi;
-    int Sensitive;
+    int Sensitive; // 1-10，1最高，10最低
     IPCNetMdArea_st Area;
 }IPCNetMoveDetCfg_st;
 typedef struct IPCNetTimerCfg{
@@ -2462,18 +2487,21 @@ typedef struct //告警联动IO信息
     int Delay;//0~60s
 }IPCNetAlarmIOCfg_st;
 typedef struct IPCNetAlarmTriggerOperation{
-    IPCNetAlarmSnapCfg_st SnapCfg;
-    IPCNetAlarmRecordCfg_st RecCfg;
-    IPCNetAlarmIOCfg_st IOCfg;
+    IPCNetAlarmSnapCfg_st SnapCfg;  // 抓拍
+    IPCNetAlarmRecordCfg_st RecCfg; // 录像
+    IPCNetAlarmIOCfg_st IOCfg;      //
     IPCNetAlarmPresetInfo_st PresetInfo;
 }IPCNetAlarmTriggerOperation_st;
 typedef struct IPCNETMoveAlarmCfg{
 	int new_protocal;
 	//-------------------------- new protocal ---------------------------
 	Boolean_t Enable;
-	String Type;
+	String Type;//md,od,fd,hmshp,cry,io,adc,temp
+    // 移动侦测
 	IPCNetMoveDetCfg_st md;
+    // 布防时间
 	IPCNetTimerCfg_st *Week2[8];//Week
+    // 触发操作
 	IPCNetAlarmTriggerOperation_st Operation;
 
 	//-------------------------- old protocal ---------------------------
@@ -2751,7 +2779,7 @@ typedef struct IPCNETMoveAlarmCfg{
 				JSONObject jsTimerCfg;
 				if(Week2[i]){
 					IPCNetTimerCfg_st*wday = Week2[i];
-					//jsTimerCfg.put("Enable", wday->Enable);
+					jsTimerCfg.put("Enable", wday->Enable);
 					jsTimerCfg.put("Day", wday->Day);
 					if(wday->Period.size()==0)
 						continue;
@@ -3921,7 +3949,7 @@ typedef struct IPCNetAudioCfg{
             jsroot->getInt("AiCh",AiCh);
 			jsroot->getBoolean("AecEnable",AecEnable);
 			jsroot->getBoolean("AecSupported",AecSupported);
-			JSONObject *jsAudioInCfg = jsdata.getJSONObject("AudioInCfg");
+			JSONObject *jsAudioInCfg = jsroot->getJSONObject("AudioInCfg");
 			if(jsAudioInCfg){
 				jsAudioInCfg->getBoolean("Mute", AudioInCfg.Mute);
 
@@ -3978,10 +4006,11 @@ typedef struct IPCNetAudioCfg{
 
 				delete jsAudioInCfg;
 			}
-			JSONObject *jsAudioOutCfg = jsdata.getJSONObject("AudioOutCfg");
+            JSONObject *jsAudioOutCfg = jsroot->getJSONObject("AudioOutCfg");
 			if(jsAudioOutCfg){
 				jsAudioOutCfg->getBoolean("Mute", AudioOutCfg.Mute);
 				jsAudioOutCfg->getString("Dec", AudioOutCfg.Dec);
+                jsAudioOutCfg->getInt("Vol", AudioOutCfg.Vol);
 				AudioOutCfg.DecList.clear();
 				JSONArray*jsDecList = jsAudioInCfg->getJSONArray("DecList");
 				if(jsDecList){
@@ -4034,4 +4063,347 @@ typedef struct IPCNetAudioCfg{
     }
 }IPCNetAudioCfg_st;
 
+typedef struct IPCNetAlarmMsgReport{
+	int newProtocol;
+    //------------------------- new protocol --------------------------
+    String Type;//md,od,fd,...
+    int AlarmId;
+    String AlarmSnapshot;// 报警图片下载地址
+    int Date;//20200628 -> 2020年6月28日
+	int Time;//112830123 -> 11:28:30.123
+    IPCNetMoveDetCfg_st md;
+
+	//------------------------ old protocol --------------------------
+    int AlarmType;
+    int Idx;
+    int Val;
+    int AlarmSta;
+    IPCNetDate_st AlarmDate;// = new IPCNetDate_st();
+    IPCNetTime_st AlarmTime;// = new IPCNetTime_st();
+
+	IPCNetAlarmMsgReport(){
+		newProtocol=1;
+	}
+    Boolean_t parseJSON(JSONObject &jsdata) {
+        
+        JSONObject *jsroot = jsdata.getJSONObject("AlarmReport.info");
+        if (jsroot != NULL) {
+			if(jsroot->getString("Type", Type)){
+				newProtocol = 1;
+			}else{
+				if(jsroot->getInt("AlarmType", AlarmType)){
+					newProtocol = 0;
+				}
+			}
+			if(newProtocol == 1){
+				jsroot->getInt("AlarmId", AlarmId);
+                jsroot->getInt("Date", Date);
+                jsroot->getInt("Time", Time);
+                jsroot->getString("AlarmSnapshot", AlarmSnapshot);
+
+                AlarmDate.Year = Date/10000;
+                AlarmDate.Mon = (Date/100)%100;
+                AlarmDate.Day = Date%100;
+                AlarmTime.Hour = Time/10000000;
+                AlarmTime.Min = (Time/100000)%100;
+                AlarmTime.Sec = (Time/1000)%100;
+
+                JSONObject *jsMoveInfo = jsroot->getJSONObject("Src.md");
+				if(jsMoveInfo){
+					jsMoveInfo->getInt("Vi", md.Vi);
+					//md.Sensitive = jsMoveInfo.getInt("Sensitive");
+					JSONObject *jsArea = jsMoveInfo->getJSONObject("Area");
+					if(jsArea){
+						jsArea->getInt("Col", md.Area.Col);
+						jsArea->getInt("Row", md.Area.Row);
+						JSONArray *jaBitMask = jsArea->getJSONArray("BitMask");
+						if(jaBitMask){
+							for(int j=0;j<jaBitMask->getLength();j++){
+								jaBitMask->getInt(j, md.Area.BitMask[j]);
+							}
+							delete jaBitMask;
+						}
+						delete jsArea;
+					}
+					delete jsMoveInfo;
+				}
+			}else{
+				jsroot->getInt("Idx", Idx);
+				jsroot->getInt("Val", Val);
+				jsroot->getInt("AlarmSta", AlarmSta);
+
+				JSONObject *info = jsroot->getJSONObject("AlarmDate");
+				if(info){
+					info->getInt("Day", AlarmDate.Day);
+					info->getInt("Mon", AlarmDate.Mon);
+					info->getInt("Year", AlarmDate.Year);
+					delete info;
+				}
+				info = jsroot->getJSONObject("AlarmTime");
+				if(info){
+					info->getInt("Hour", AlarmTime.Hour);
+					info->getInt("Min", AlarmTime.Min);
+					info->getInt("Sec", AlarmTime.Sec);
+					delete info;
+				}
+			}
+
+			delete jsroot;
+        }
+
+        return true;
+    }
+
+    int toJSONString(String &str) {
+        JSONObject jsroot;// = new JSONObject();
+        //try {
+            JSONObject jresult;// = new JSONObject();
+
+            JSONObject info;// = new JSONObject();
+            info.put("Day", AlarmDate.Day);
+            info.put("Mon", AlarmDate.Mon);
+            info.put("Year", AlarmDate.Year);
+            jresult.put("AlarmDate", info);
+
+            JSONObject info1;// = new JSONObject();
+            info1.put("Hour", AlarmTime.Hour);
+            info1.put("Min", AlarmTime.Min);
+            info1.put("Sec", AlarmTime.Sec);
+            jresult.put("AlarmTime", info1);
+
+            jsroot.put("AlarmReport.info", jresult);
+        //} catch (JSONException e) {
+        //    e.printStackTrace();
+        //    return null;
+        //}
+			
+		return jsroot.toString(str);
+    }
+}IPCNetAlarmMsgReport_st;
+
+//{"dump":1969496699,"ret":0}
+typedef struct IPCNetResult{
+	int ret;
+	String tips;
+	IPCNetResult(){
+		ret=-1;
+		tips="";
+	}
+	Boolean_t parseJSON(JSONObject &jsdata) {
+		jsdata.getString("tips", tips);
+		if(jsdata.getInt("ret", ret)){
+			return true;
+		}
+		return 0;
+	}
+}IPCNetRetsult_st;
+
+typedef struct IPCNetTalk{
+	Boolean_t TalkEnable;
+	
+	int toJSONString(String &str) {
+		JSONObject jsroot;// = new JSONObject();
+
+		JSONObject jresult;// = new JSONObject();
+
+		jresult.put("TalkEnable", TalkEnable);
+
+		jsroot.put("Talk.Req", jresult);
+       
+		return jsroot.toString(str);
+    }
+}IPCNetTalk_st;
+
+//Example for how to set hotkey
+//IPCNetHotKey_st hotkey;
+//set hotkey name, val
+//String str;
+//hotkey.toJSONString(str);
+//IPCNetSendJsonCmdR(uuid, IPCNET_SET_HOTKEY_REQ , str.c_str(),OnCmdResult_t r);
+typedef struct IPCNetHotKey{
+	char *Name;
+	int Min;
+	int Max;
+	int Val;
+	
+	int toJSONString(String &str) {
+		JSONObject jsroot;// = new JSONObject();
+
+		jsroot.put("Name", Name);
+		jsroot.put("Min", Min);
+		jsroot.put("Max", Max);
+		jsroot.put("Val", Val);
+       
+		return jsroot.toString(str);
+    }
+}IPCNetHotKey_st;
+
+typedef struct
+{
+    char FileName[MAX_PATH];
+	char Md5sum[128];//文件MD5 SUM
+    unsigned int Size;//文件大小
+}IPCNetPutFileReq_st;
+typedef struct
+{
+    char FileName[MAX_PATH];
+	unsigned int Offset;//用于断点续传,从offset初开始获取文件数据
+}IPCNetGetFileReq_st;
+typedef struct IPCNetTransFileReq
+{
+	IPCNetTransFileReq(){
+		memset(Cmd, 0, sizeof(Cmd));
+		memset(&Transfer, 0, sizeof(Transfer));
+	}
+	char Cmd[8];//Put, Get
+	union{
+    	IPCNetPutFileReq_st Put;
+		IPCNetGetFileReq_st Get;
+	}Transfer;
+
+	int toJSONString(String &str) {
+		JSONObject jsroot;// = new JSONObject();
+
+		JSONObject jresult;// = new JSONObject();
+
+		jresult.put("Cmd", Cmd);
+
+		if(strncmp(Cmd, "Put", sizeof(Cmd))==0 || strncmp(Cmd, "StopPut", sizeof(Cmd))==0){
+			JSONObject jsput;
+			jsput.put("FileName", Transfer.Put.FileName);
+			jsput.put("Md5sum", Transfer.Put.Md5sum);
+			jsput.put("Size", (int)Transfer.Put.Size);
+			jresult.put("Transfer.Put", jsput);
+		}else if(strncmp(Cmd, "Get", sizeof(Cmd))==0 || strncmp(Cmd, "StopGet", sizeof(Cmd))==0){
+			JSONObject jsget;
+			jsget.put("FileName", Transfer.Get.FileName);
+			jsget.put("Offset", (int)Transfer.Get.Offset);
+			jresult.put("Transfer.Get", jsget);
+		}
+
+		jresult.put("Cmd", Cmd);
+
+		jsroot.put("FileTransfer", jresult);
+       
+		return jsroot.toString(str);
+    }
+}IPCNetTransFileReq_st;
+
+typedef struct
+{
+    int Ret;//result,return value
+    char FileName[MAX_PATH];
+	unsigned int WritePos;
+}IPCNetPutFileResp_st;
+typedef struct
+{
+    int Ret;
+    char FileName[MAX_PATH];
+	char Md5sum[32];
+	unsigned int ReadPos;//读取位置
+	unsigned int Size;//文件大小
+}IPCNetGetFileResp_st;
+
+typedef struct
+{
+	char Cmd[8];//put, get
+	unsigned int Sess;
+	union{
+    	IPCNetPutFileResp_st Put;
+		IPCNetGetFileResp_st Get;
+	}Transfer;
+	Boolean_t parseJSON(JSONObject &jsdata) {
+		JSONObject *jsFileTransfer = jsdata.getJSONObject("FileTransfer");
+		if(jsFileTransfer){
+			String str;
+			jsFileTransfer->getString("Cmd", str);
+			int sess=0;
+			jsFileTransfer->getInt("Sess", sess);
+			Sess = sess;
+			strncpy(Cmd, str.c_str(), sizeof(Cmd));
+			if(strncmp(Cmd, "Put", sizeof(Cmd))==0){
+				JSONObject *jsPut = jsFileTransfer->getJSONObject("Transfer.Put");
+				if(jsPut){
+					jsPut->getString("FileName", str);
+					strncpy(Transfer.Put.FileName, str.c_str(), sizeof(Transfer.Put.FileName));
+					jsPut->getInt("Ret", Transfer.Put.Ret);
+					int WritePos=0;
+					jsPut->getInt("WritePos", WritePos);
+					Transfer.Put.WritePos = (unsigned int)WritePos;
+					delete jsPut;
+				}
+			}else if(strncmp(Cmd, "Get", sizeof(Cmd))==0){
+				JSONObject *jsGet = jsFileTransfer->getJSONObject("Transfer.Get");
+				if(jsGet){
+					jsGet->getString("FileName", str);
+					strncpy(Transfer.Get.FileName, str.c_str(), sizeof(Transfer.Get.FileName));
+					jsGet->getString("Md5sum", str);
+					strncpy(Transfer.Get.Md5sum, str.c_str(), sizeof(Transfer.Get.Md5sum));
+					jsGet->getInt("Ret", Transfer.Get.Ret);
+					int ReadPos=0;
+					jsGet->getInt("ReadPos", ReadPos);
+					Transfer.Get.ReadPos = (unsigned int)ReadPos;
+					jsGet->getInt("Size", ReadPos);
+					Transfer.Get.Size = (unsigned int)ReadPos;
+					delete jsGet;
+				}
+			}
+			delete jsFileTransfer;
+		}
+		return 1;
+	}
+}IPCNetTransFileResp_st;
+typedef struct
+{
+    unsigned int Sess;
+    unsigned int Len;
+	unsigned int Offset;
+	int ret;
+	Boolean_t parseJSON(JSONObject &jsdata) {
+		JSONObject *jsFileTransfer = jsdata.getJSONObject("FileTransfer");
+		if(jsFileTransfer){
+			int intval=0;
+			jsFileTransfer->getInt("Sess", intval);
+			Sess = (unsigned int)intval;
+			jsFileTransfer->getInt("Len", intval);
+			Len = (unsigned int)intval;
+			jsFileTransfer->getInt("Offset", intval);
+			Offset = (unsigned int)intval;
+			jsFileTransfer->getInt("ret", ret);
+			delete jsFileTransfer;
+		}
+		return 1;
+	}
+}IPCNetTransFileDataResp_t;
+
+typedef struct{
+	String app_ver;
+    String app_chk;
+    String app_url;
+    String sys_ver;
+    String sys_chk;
+    String sys_url;
+    Boolean_t parseJSON(JSONObject jsdata) {
+        jsdata.getString("app_ver", app_ver);
+        jsdata.getString("app_chk", app_chk);
+        jsdata.getString("sys_ver", sys_ver);
+        jsdata.getString("sys_chk", sys_chk);
+        return true;
+    }
+    int toJSONString(String& str) {
+        JSONObject jsroot;// = new JSONObject();
+        
+        JSONObject jsUpdateinfo;// = new JSONObject();
+        jsUpdateinfo.put("app_ver", app_ver);
+        jsUpdateinfo.put("app_chk", app_chk);
+        jsUpdateinfo.put("app_url", app_url);
+
+        jsUpdateinfo.put("sys_ver", sys_ver);
+        jsUpdateinfo.put("sys_chk", sys_chk);
+        jsUpdateinfo.put("sys_url", sys_url);
+        jsroot.put("Upgrade.info", jsUpdateinfo);
+        
+        return jsroot.toString(str);
+    }
+}IPCNetUpgradeInfo_st;
 #endif

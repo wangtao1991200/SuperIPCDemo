@@ -137,6 +137,9 @@ typedef enum
 	IPCNET_JPEG = 31,
 	IPCNET_JPEG_BUTT = 34,
 
+	IPCNET_IMG_H264_IFRAME = 35,//作为图片的单帧图像
+	IPCNET_IMG_H265_IFRAME = 36,//作为图片的单帧图像
+
 	IPCNET_H265E_NALU_BSLICE = 50+0,                             /*B SLICE types*/
     IPCNET_H265E_NALU_PSLICE = 50+1,                          /*P SLICE types*/
     IPCNET_H265E_NALU_ISLICE = 50+2,                             /*I SLICE types*/
@@ -258,6 +261,11 @@ int __declspec(dllexport) _stdcall IPCNetGetIPCNetSessionStatus(const char* uuid
 */
 int __declspec(dllexport) _stdcall IPCNetSendJsonCmd(const char* uuid,int cmd ,const char*json);
 int __declspec(dllexport) _stdcall IPCNetSendJsonCmdR(const char* uuid,int cmd ,const char*json,OnCmdResult_t r);
+
+int __declspec(dllexport) _stdcall IPCNetSendBinaryDataR(const char* uuid,int cmd ,const char*data, int len,OnCmdResult_t r);
+#define IPCNetSendBinaryData(uuid, cmd ,data, len) \
+	IPCNetSendBinaryDataR(uuid, cmd ,data, len, 0);
+
 /*
 * IPCNetStartVideo(R) 请求视频
 *stream:0~1， 0:主码流，高清码流，适合设备端录像， 1:子码流，标清码流，适合网络传输
@@ -495,8 +503,10 @@ int __declspec(dllexport) _stdcall IPCNetSetIRMode(const char* uuid,const char*j
 int __declspec(dllexport) _stdcall IPCNetSetIRModeR(const char* uuid,const char*json,OnCmdResult_t r);
 
 //设备OSD，视频水印设置
+//IPCNetGetOsdCfg_st
 int __declspec(dllexport) _stdcall IPCNetGetOSDR(const char* uuid,const char*json,OnCmdResult_t r);
 #define IPCNetGetOSD(x,y) IPCNetGetOSDR(x,y,0)
+//IPCNetOsdCfg_st
 int __declspec(dllexport) _stdcall IPCNetSetOSDR(const char* uuid,const char*json,OnCmdResult_t r);
 #define IPCNetSetOSD(x,y) IPCNetSetOSDR(x,y,0)
 
@@ -506,10 +516,10 @@ int __declspec(dllexport) _stdcall IPCNetGetAlarmR(const char* uuid,OnCmdResult_
 int __declspec(dllexport) _stdcall IPCNetSetAlarmR(const char* uuid,const char*json,OnCmdResult_t r);
 #define IPCNetSetAlarm(x,y) IPCNetSetAlarmR(x,y,0)
 
-int __declspec(dllexport) _stdcall IPCNetGetGPIOR(const char* uuid,const char*json,OnCmdResult_t r);
-#define IPCNetGetGPIO(x,y) IPCNetGetGPIOR(x,y,0)
-int __declspec(dllexport) _stdcall IPCNetSetGPIOR(const char* uuid,const char*json,OnCmdResult_t r);
-#define IPCNetSetGPIO(x,y) IPCNetSetGPIOR(x,y,0)
+//int __declspec(dllexport) _stdcall IPCNetGetGPIOR(const char* uuid,const char*json,OnCmdResult_t r);
+//#define IPCNetGetGPIO(x,y) IPCNetGetGPIOR(x,y,0)
+//int __declspec(dllexport) _stdcall IPCNetSetGPIOR(const char* uuid,const char*json,OnCmdResult_t r);
+//#define IPCNetSetGPIO(x,y) IPCNetSetGPIOR(x,y,0)
 
 
 
@@ -655,11 +665,12 @@ int __declspec(dllexport) _stdcall IPCNetDeleteRemoteFileR(const char* uuid,cons
 
 
 //下载设备文件
-typedef void(*OnDonwloadDataCallback_t)(const char*uuid,const char *file,const char*data,int len,unsigned int offset);
-int __declspec(dllexport) _stdcall IPCNetStartDownloadFileR(const char* uuid,const char*path,OnDonwloadDataCallback_t onData,OnCmdResult_t r);
-#define IPCNetStartDownloadFile(x,y,z) IPCNetStartDownloadFileR(x,y,z,0)
-int __declspec(dllexport) _stdcall IPCNetStopDownloadFileR(const char* uuid,const char*path,OnCmdResult_t r);
-#define IPCNetStopDownloadFile(x,y) IPCNetStopDownloadFileR(x,y,0)
+//废弃接口
+//typedef void(*OnDonwloadDataCallback_t)(const char*uuid,const char *file,const char*data,int len,unsigned int offset);
+//int __declspec(dllexport) _stdcall IPCNetStartDownloadFileR(const char* uuid,const char*path,OnDonwloadDataCallback_t onData,OnCmdResult_t r);
+//#define IPCNetStartDownloadFile(x,y,z) IPCNetStartDownloadFileR(x,y,z,0)
+//int __declspec(dllexport) _stdcall IPCNetStopDownloadFileR(const char* uuid,const char*path,OnCmdResult_t r);
+//#define IPCNetStopDownloadFile(x,y) IPCNetStopDownloadFileR(x,y,0)
 
 //PTZ控制，摇头相关
 int __declspec(dllexport) _stdcall IPCNetSetPtzCtrlR(const char* uuid,const char*json,OnCmdResult_t r);
@@ -760,7 +771,8 @@ int __declspec(dllexport) _stdcall IPCNetPlaybackSeekR(const char* uuid,long tim
 
 //timestamp millisecond, just for reference, not the actual time
 //call IPCNetSetSnapshotCallBack to register snapshot callback when status return ERROR_SEP2P_SUCCESSFUL
-typedef void(*OnSnapshotCallBack_t)(const char*uuid,int type,unsigned char*data,int len,long timestamp);
+//type -> VideoAudioCodeType_e, jpg or H264/H265 IFrame
+typedef void(*OnSnapshotCallBack_t)(const char*uuid,int type,unsigned char*data,int len, unsigned long long timestamp);
 int __declspec(dllexport) _stdcall IPCNetSetSnapshotCallBack(const char* uuid,OnSnapshotCallBack_t cb);
 int __declspec(dllexport) _stdcall IPCNetSnapshot(const char* uuid, int vi);
 
@@ -792,6 +804,8 @@ typedef enum IPCNET_AUDIO_ENCODE_TYPE{
 }IPCNET_AUDIO_ENCODE_TYPE_et;
 ////0:h264,1:mjpg,2:h265 and so on.
 //0:g711u,1:g711a,2:pcm,3:aac
+//for example: ret = IPCNetStartRecordLocalVideo(path, (IPCNET_VIDEO_ENCODE_TYPE_et)video_type, framerate,
+//		IPCNET_AUDIO_ENCODE_TYPE_PCM, 8000, 16, 1);
 RecSess_t __declspec(dllexport) _stdcall IPCNetStartRecordLocalVideo(const char*path, IPCNET_VIDEO_ENCODE_TYPE_et videoType, int fps,
 	IPCNET_AUDIO_ENCODE_TYPE_et audioType, int sampleRate, int bitWidth, int channels);
 //视频真正开始录制之前，需要输入PPS/SPS/VPS，也可以输入PPS/SPS/VPS与I帧复合的视频帧
@@ -817,6 +831,60 @@ int8_t __declspec(dllexport) _stdcall IPCNetALawEncode(int16_t number);
 int16_t __declspec(dllexport) _stdcall IPCNetMuLawDecode(int8_t number);
 /**PCM to G711u**/
 int8_t __declspec(dllexport) _stdcall IPCNetMuLawEncode(int16_t number);
+
+
+//IPCNET_BINARY_DATA_MSG_REQ
+#define IPCNetSendCustomDataToDevR(uuid, data, len, r) IPCNetSendBinaryDataR(uuid, IPCNET_BINARY_DATA_MSG_REQ , data, len, r)
+#define IPCNetSendCustomDataToDev(uuid, data, len) IPCNetSendBinaryDataR(uuid, IPCNET_BINARY_DATA_MSG_REQ , data, len, 0)
+
+//IPCNetHotKey_st
+//Name and Val of IPCNetHotKey_st should be set
+//IPCNetHotKey_st generate json string
+#define IPCNetSetHotkeyR(uuid, json_str, r) \
+	IPCNetSendJsonCmdR(uuid, IPCNET_SET_HOTKEY_REQ , json_str, r);
+
+
+//文件传输协议
+//低速/断点续传
+#define FILE_TRANSFER_SEND 0
+#define FILE_TRANSFER_RECV 1
+//sor: 0:send, 1:recieve
+typedef void(*OnFileTransferProgress_t)(int sor, const char*uuid,const char *file, int progress, int transferedSize);
+int __declspec(dllexport) _stdcall IPCNetSetFileTransferProgressCallback(const char* uuid, OnFileTransferProgress_t ftp);
+int __declspec(dllexport) _stdcall IPCNetSendFileToDevice(const char* uuid, const char*src_path, const char*dest_path, OnCmdResult_t r);
+int __declspec(dllexport) _stdcall IPCNetStopSendFileToDevice(const char* uuid, const char*src_path, const char*dest_path, OnCmdResult_t r);
+int __declspec(dllexport) _stdcall IPCNetGetFileFromDevice(const char* uuid, const char*src_path, const char*dest_path, OnCmdResult_t r);
+int __declspec(dllexport) _stdcall IPCNetStopGetFileFromDevice(const char* uuid, const char*src_path, const char*dest_path, OnCmdResult_t r);
+
+
+//remote update from server/服务器远程升级接口
+//版本号从登录成功返回的设备信息里面获取，主要是 app_ver/sys_ver 字段，如果没有这两个字段，固件是老版本，不支持远程升级
+//pid（product identity）也是从登录成功返回的设备信息里面获取，字段为pid
+
+//版本比较
+//服务器update.json内的 app_ver/sys_ver 与设备的 app_ver/sys_ver比较，如果服务器的大于设备的，说明服务器版本更新
+
+//服务器版本从 http://server_ip/comdownload/ipc_firmware/pid/update.json 获取，pid修改为对应设备的pid
+//server_ip 为服务器IP或是服务器域名
+/*
+//update.json内容如下
+{
+"app_ver":"2008281047.102",
+"app_chk":"474192",
+"app_name":"app_data_name",
+"sys_ver":"2008281047.102",
+"sys_chk":"420064",
+"sys_name":"system_data_name"
+}
+其中，app_ver/app_chk/sys_ver/sys_chk升级时，设置到IPCNetUpgradeInfo_st对应参数
+IPCNetUpgradeInfo_st 的 app_url 字段, 拼凑格式为:http://server_ip/comdownload/ipc_firmware/pid/app_data_name, 从服务器update.json获取其中的pid，app_data_name
+sys_url 字段, 拼凑格式为:http://server_ip/comdownload/ipc_firmware/pid/system_data_name, 从服务器update.json获取其中的pid，system_data_name
+*/
+#define IPCNetGetUpdateCfgR(uuid, json_str, r) IPCNetSendJsonCmdR(uuid, IPCNET_UPGRADE_CFG_REQ , json_str, r);
+//json_str 使用 IPCNetUpgradeInfo_st.toJSONString 生成
+#define IPCNetUpdateDeviceR(uuid, json_str, r) IPCNetSendJsonCmdR(uuid, IPCNET_UPGRADE_REQ, json_str, r);
+
+
 
 
 #ifdef __cplusplus

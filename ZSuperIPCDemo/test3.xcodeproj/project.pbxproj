@@ -7,12 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		045CBE9D240BDDBF00AF4C9D /* liblibgpac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 045CBE9B240BDDBF00AF4C9D /* liblibgpac.a */; };
-		045CBE9E240BDDBF00AF4C9D /* libfaac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 045CBE9C240BDDBF00AF4C9D /* libfaac.a */; };
-		046891B3240119C300EA77B8 /* libIOTCAPIs_ALLT.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 046891AF240119C200EA77B8 /* libIOTCAPIs_ALLT.a */; };
-		046891B4240119C300EA77B8 /* libIOTCAPIs_ALL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 046891B0240119C200EA77B8 /* libIOTCAPIs_ALL.a */; };
-		046891B5240119C300EA77B8 /* libIOTCAPIs_P2PTunnel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 046891B1240119C200EA77B8 /* libIOTCAPIs_P2PTunnel.a */; };
-		046891B6240119C300EA77B8 /* libIOTCAPIs_P2PTunnelT.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 046891B2240119C300EA77B8 /* libIOTCAPIs_P2PTunnelT.a */; };
 		AB4827452418E2F6008970A0 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB4827442418E2F5008970A0 /* AVKit.framework */; };
 		AB6516E424B41EE9000EF54A /* UIView+LJWKeyboardHandlerAddtion.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6516DE24B41EE9000EF54A /* UIView+LJWKeyboardHandlerAddtion.m */; };
 		AB6516E524B41EE9000EF54A /* UIViewController+LJWKeyboardHandlerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6516DF24B41EE9000EF54A /* UIViewController+LJWKeyboardHandlerHelper.m */; };
@@ -20,7 +14,15 @@
 		AB6516E724B41EE9000EF54A /* LJWKeyboardHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6516E124B41EE9000EF54A /* LJWKeyboardHandler.m */; };
 		AB6516E824B41EE9000EF54A /* UIWindow+LJWPresentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AB6516E224B41EE9000EF54A /* UIWindow+LJWPresentViewController.m */; };
 		AB6516E924B41EE9000EF54A /* Resources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = AB6516E324B41EE9000EF54A /* Resources.bundle */; };
-		AB65175B24BEE56C000EF54A /* H264lib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB65175A24BEE56B000EF54A /* H264lib.a */; };
+		AB78FD0D24F8D98700C0DB07 /* libFBP2P.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB78FCFE24F8D98700C0DB07 /* libFBP2P.a */; };
+		AB78FD0E24F8D98700C0DB07 /* libIOTCAPIs_P2PTunnel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB78FCFF24F8D98700C0DB07 /* libIOTCAPIs_P2PTunnel.a */; };
+		AB78FD0F24F8D98700C0DB07 /* libIPCNetManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB78FD0024F8D98700C0DB07 /* libIPCNetManager.a */; };
+		AB78FD1024F8D98700C0DB07 /* liblibgpac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB78FD0124F8D98700C0DB07 /* liblibgpac.a */; };
+		AB78FD1124F8D98700C0DB07 /* libIOTCAPIs_P2PTunnelT.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB78FD0224F8D98700C0DB07 /* libIOTCAPIs_P2PTunnelT.a */; };
+		AB78FD1224F8D98700C0DB07 /* libfaac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB78FD0324F8D98700C0DB07 /* libfaac.a */; };
+		AB78FD1324F8D98700C0DB07 /* libIOTCAPIs_ALLT.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB78FD0424F8D98700C0DB07 /* libIOTCAPIs_ALLT.a */; };
+		AB78FD1424F8D98700C0DB07 /* libIOTCAPIs_ALL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB78FD0524F8D98700C0DB07 /* libIOTCAPIs_ALL.a */; };
+		AB78FD1524F8D98700C0DB07 /* H264lib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB78FD0824F8D98700C0DB07 /* H264lib.a */; };
 		F2A5F51620762115001BB94B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F2A5F51520762115001BB94B /* AppDelegate.m */; };
 		F2A5F51920762115001BB94B /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F2A5F51820762115001BB94B /* ViewController.mm */; };
 		F2A5F51C20762115001BB94B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F2A5F51A20762115001BB94B /* Main.storyboard */; };
@@ -29,10 +31,6 @@
 		F2A5F52420762117001BB94B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F2A5F52320762117001BB94B /* main.m */; };
 		F2A5F52E20762117001BB94B /* test3Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = F2A5F52D20762117001BB94B /* test3Tests.m */; };
 		F2A5F53920762118001BB94B /* test3UITests.m in Sources */ = {isa = PBXBuildFile; fileRef = F2A5F53820762118001BB94B /* test3UITests.m */; };
-		F2A5F54920762905001BB94B /* libFBP2P.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F2A5F54720762905001BB94B /* libFBP2P.a */; };
-		F2A5F54A20762905001BB94B /* libIPCNetManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F2A5F54820762905001BB94B /* libIPCNetManager.a */; };
-		F2A5F55120763C92001BB94B /* c_plus_plus_stub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2A5F54F20763C92001BB94B /* c_plus_plus_stub.cpp */; };
-		F2A5F55220763C92001BB94B /* c_stub.c in Sources */ = {isa = PBXBuildFile; fileRef = F2A5F55020763C92001BB94B /* c_stub.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,14 +51,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		045CBE9B240BDDBF00AF4C9D /* liblibgpac.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblibgpac.a; sourceTree = "<group>"; };
-		045CBE9C240BDDBF00AF4C9D /* libfaac.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfaac.a; sourceTree = "<group>"; };
-		046891AF240119C200EA77B8 /* libIOTCAPIs_ALLT.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libIOTCAPIs_ALLT.a; sourceTree = "<group>"; };
-		046891B0240119C200EA77B8 /* libIOTCAPIs_ALL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libIOTCAPIs_ALL.a; sourceTree = "<group>"; };
-		046891B1240119C200EA77B8 /* libIOTCAPIs_P2PTunnel.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libIOTCAPIs_P2PTunnel.a; sourceTree = "<group>"; };
-		046891B2240119C300EA77B8 /* libIOTCAPIs_P2PTunnelT.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libIOTCAPIs_P2PTunnelT.a; sourceTree = "<group>"; };
 		AB4827442418E2F5008970A0 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
-		AB4EFA5A23F65D6100D584E7 /* SEP2P_API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SEP2P_API.h; sourceTree = "<group>"; };
 		AB597B3023FF98AC00F04F84 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		AB6516D824B41EE9000EF54A /* UIView+LJWKeyboardHandlerAddtion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+LJWKeyboardHandlerAddtion.h"; sourceTree = "<group>"; };
 		AB6516D924B41EE9000EF54A /* UIViewController+LJWKeyboardHandlerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+LJWKeyboardHandlerHelper.h"; sourceTree = "<group>"; };
@@ -74,15 +65,29 @@
 		AB6516E124B41EE9000EF54A /* LJWKeyboardHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJWKeyboardHandler.m; sourceTree = "<group>"; };
 		AB6516E224B41EE9000EF54A /* UIWindow+LJWPresentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+LJWPresentViewController.m"; sourceTree = "<group>"; };
 		AB6516E324B41EE9000EF54A /* Resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Resources.bundle; sourceTree = "<group>"; };
-		AB65175A24BEE56B000EF54A /* H264lib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = H264lib.a; sourceTree = "<group>"; };
-		AB65176424BEE8CB000EF54A /* XBAudioTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBAudioTool.h; sourceTree = "<group>"; };
-		AB65176524BEE8CB000EF54A /* XBAudioUnitPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBAudioUnitPlayer.h; sourceTree = "<group>"; };
-		AB65176624BEE8CB000EF54A /* XBAudioUnitRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBAudioUnitRecorder.h; sourceTree = "<group>"; };
-		AB65177224BEED09000EF54A /* H26xHwDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = H26xHwDecoder.h; sourceTree = "<group>"; };
-		AB65177324BEEF39000EF54A /* Header_audio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Header_audio.h; sourceTree = "<group>"; };
-		F2787DC72083608300890A06 /* JSONStructProtocal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONStructProtocal.h; sourceTree = "<group>"; };
-		F2787DC82083619F00890A06 /* cJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cJSON.h; sourceTree = "<group>"; };
-		F2787DC92083619F00890A06 /* JSONObject.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = JSONObject.hpp; sourceTree = "<group>"; };
+		AB78FCF324F8D98700C0DB07 /* JSONObject.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = JSONObject.hpp; sourceTree = "<group>"; };
+		AB78FCF424F8D98700C0DB07 /* SEP2P_API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SEP2P_API.h; sourceTree = "<group>"; };
+		AB78FCF524F8D98700C0DB07 /* cJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cJSON.h; sourceTree = "<group>"; };
+		AB78FCF724F8D98700C0DB07 /* SEP2P_Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SEP2P_Error.h; sourceTree = "<group>"; };
+		AB78FCF824F8D98700C0DB07 /* IPCNetManagerInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPCNetManagerInterface.h; sourceTree = "<group>"; };
+		AB78FCF924F8D98700C0DB07 /* JSONStructProtocal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONStructProtocal.h; sourceTree = "<group>"; };
+		AB78FCFA24F8D98700C0DB07 /* StringConvert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringConvert.h; sourceTree = "<group>"; };
+		AB78FCFB24F8D98700C0DB07 /* SEP2P_Type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SEP2P_Type.h; sourceTree = "<group>"; };
+		AB78FCFC24F8D98700C0DB07 /* sepcam_protocal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sepcam_protocal.h; sourceTree = "<group>"; };
+		AB78FCFE24F8D98700C0DB07 /* libFBP2P.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFBP2P.a; sourceTree = "<group>"; };
+		AB78FCFF24F8D98700C0DB07 /* libIOTCAPIs_P2PTunnel.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libIOTCAPIs_P2PTunnel.a; sourceTree = "<group>"; };
+		AB78FD0024F8D98700C0DB07 /* libIPCNetManager.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libIPCNetManager.a; sourceTree = "<group>"; };
+		AB78FD0124F8D98700C0DB07 /* liblibgpac.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblibgpac.a; sourceTree = "<group>"; };
+		AB78FD0224F8D98700C0DB07 /* libIOTCAPIs_P2PTunnelT.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libIOTCAPIs_P2PTunnelT.a; sourceTree = "<group>"; };
+		AB78FD0324F8D98700C0DB07 /* libfaac.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfaac.a; sourceTree = "<group>"; };
+		AB78FD0424F8D98700C0DB07 /* libIOTCAPIs_ALLT.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libIOTCAPIs_ALLT.a; sourceTree = "<group>"; };
+		AB78FD0524F8D98700C0DB07 /* libIOTCAPIs_ALL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libIOTCAPIs_ALL.a; sourceTree = "<group>"; };
+		AB78FD0724F8D98700C0DB07 /* H26xHwDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = H26xHwDecoder.h; sourceTree = "<group>"; };
+		AB78FD0824F8D98700C0DB07 /* H264lib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = H264lib.a; sourceTree = "<group>"; };
+		AB78FD0924F8D98700C0DB07 /* Header_audio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Header_audio.h; sourceTree = "<group>"; };
+		AB78FD0A24F8D98700C0DB07 /* XBAudioTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBAudioTool.h; sourceTree = "<group>"; };
+		AB78FD0B24F8D98700C0DB07 /* XBAudioUnitRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBAudioUnitRecorder.h; sourceTree = "<group>"; };
+		AB78FD0C24F8D98700C0DB07 /* XBAudioUnitPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBAudioUnitPlayer.h; sourceTree = "<group>"; };
 		F2A5F51120762115001BB94B /* test3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test3.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2A5F51420762115001BB94B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F2A5F51520762115001BB94B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -99,14 +104,6 @@
 		F2A5F53420762118001BB94B /* test3UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = test3UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2A5F53820762118001BB94B /* test3UITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = test3UITests.m; sourceTree = "<group>"; };
 		F2A5F53A20762118001BB94B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F2A5F54720762905001BB94B /* libFBP2P.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFBP2P.a; sourceTree = "<group>"; };
-		F2A5F54820762905001BB94B /* libIPCNetManager.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libIPCNetManager.a; sourceTree = "<group>"; };
-		F2A5F54C20762C90001BB94B /* IPCNetManagerInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPCNetManagerInterface.h; sourceTree = "<group>"; };
-		F2A5F54D20762C90001BB94B /* sepcam_protocal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sepcam_protocal.h; sourceTree = "<group>"; };
-		F2A5F54F20763C92001BB94B /* c_plus_plus_stub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = c_plus_plus_stub.cpp; sourceTree = "<group>"; };
-		F2A5F55020763C92001BB94B /* c_stub.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = c_stub.c; sourceTree = "<group>"; };
-		F2A5F55320775BE7001BB94B /* SEP2P_Type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SEP2P_Type.h; sourceTree = "<group>"; };
-		F2A5F55420775BEE001BB94B /* SEP2P_Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SEP2P_Error.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,16 +111,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F2A5F54A20762905001BB94B /* libIPCNetManager.a in Frameworks */,
-				045CBE9D240BDDBF00AF4C9D /* liblibgpac.a in Frameworks */,
-				045CBE9E240BDDBF00AF4C9D /* libfaac.a in Frameworks */,
-				AB65175B24BEE56C000EF54A /* H264lib.a in Frameworks */,
-				046891B3240119C300EA77B8 /* libIOTCAPIs_ALLT.a in Frameworks */,
-				F2A5F54920762905001BB94B /* libFBP2P.a in Frameworks */,
-				046891B4240119C300EA77B8 /* libIOTCAPIs_ALL.a in Frameworks */,
-				046891B5240119C300EA77B8 /* libIOTCAPIs_P2PTunnel.a in Frameworks */,
-				046891B6240119C300EA77B8 /* libIOTCAPIs_P2PTunnelT.a in Frameworks */,
+				AB78FD1424F8D98700C0DB07 /* libIOTCAPIs_ALL.a in Frameworks */,
+				AB78FD1324F8D98700C0DB07 /* libIOTCAPIs_ALLT.a in Frameworks */,
+				AB78FD1024F8D98700C0DB07 /* liblibgpac.a in Frameworks */,
+				AB78FD1524F8D98700C0DB07 /* H264lib.a in Frameworks */,
+				AB78FD0D24F8D98700C0DB07 /* libFBP2P.a in Frameworks */,
 				AB4827452418E2F6008970A0 /* AVKit.framework in Frameworks */,
+				AB78FD0F24F8D98700C0DB07 /* libIPCNetManager.a in Frameworks */,
+				AB78FD0E24F8D98700C0DB07 /* libIOTCAPIs_P2PTunnel.a in Frameworks */,
+				AB78FD1224F8D98700C0DB07 /* libfaac.a in Frameworks */,
+				AB78FD1124F8D98700C0DB07 /* libIOTCAPIs_P2PTunnelT.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,19 +149,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		AB52C14823FE7F6100C921F1 /* H264lib */ = {
-			isa = PBXGroup;
-			children = (
-				AB65175A24BEE56B000EF54A /* H264lib.a */,
-				AB65176424BEE8CB000EF54A /* XBAudioTool.h */,
-				AB65177324BEEF39000EF54A /* Header_audio.h */,
-				AB65177224BEED09000EF54A /* H26xHwDecoder.h */,
-				AB65176524BEE8CB000EF54A /* XBAudioUnitPlayer.h */,
-				AB65176624BEE8CB000EF54A /* XBAudioUnitRecorder.h */,
-			);
-			path = H264lib;
-			sourceTree = "<group>";
-		};
 		AB6516D724B41EE9000EF54A /* LJWKeyboardHandler */ = {
 			isa = PBXGroup;
 			children = (
@@ -184,14 +168,57 @@
 			path = LJWKeyboardHandler;
 			sourceTree = "<group>";
 		};
+		AB78FCF224F8D98700C0DB07 /* includes */ = {
+			isa = PBXGroup;
+			children = (
+				AB78FCF524F8D98700C0DB07 /* cJSON.h */,
+				AB78FCF824F8D98700C0DB07 /* IPCNetManagerInterface.h */,
+				AB78FCF924F8D98700C0DB07 /* JSONStructProtocal.h */,
+				AB78FCFA24F8D98700C0DB07 /* StringConvert.h */,
+				AB78FCF424F8D98700C0DB07 /* SEP2P_API.h */,
+				AB78FCFB24F8D98700C0DB07 /* SEP2P_Type.h */,
+				AB78FCF724F8D98700C0DB07 /* SEP2P_Error.h */,
+				AB78FCF324F8D98700C0DB07 /* JSONObject.hpp */,
+				AB78FCFC24F8D98700C0DB07 /* sepcam_protocal.h */,
+			);
+			path = includes;
+			sourceTree = "<group>";
+		};
+		AB78FCFD24F8D98700C0DB07 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				AB78FCFE24F8D98700C0DB07 /* libFBP2P.a */,
+				AB78FCFF24F8D98700C0DB07 /* libIOTCAPIs_P2PTunnel.a */,
+				AB78FD0024F8D98700C0DB07 /* libIPCNetManager.a */,
+				AB78FD0124F8D98700C0DB07 /* liblibgpac.a */,
+				AB78FD0224F8D98700C0DB07 /* libIOTCAPIs_P2PTunnelT.a */,
+				AB78FD0324F8D98700C0DB07 /* libfaac.a */,
+				AB78FD0424F8D98700C0DB07 /* libIOTCAPIs_ALLT.a */,
+				AB78FD0524F8D98700C0DB07 /* libIOTCAPIs_ALL.a */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		AB78FD0624F8D98700C0DB07 /* H264lib */ = {
+			isa = PBXGroup;
+			children = (
+				AB78FD0824F8D98700C0DB07 /* H264lib.a */,
+				AB78FD0724F8D98700C0DB07 /* H26xHwDecoder.h */,
+				AB78FD0924F8D98700C0DB07 /* Header_audio.h */,
+				AB78FD0A24F8D98700C0DB07 /* XBAudioTool.h */,
+				AB78FD0B24F8D98700C0DB07 /* XBAudioUnitRecorder.h */,
+				AB78FD0C24F8D98700C0DB07 /* XBAudioUnitPlayer.h */,
+			);
+			path = H264lib;
+			sourceTree = "<group>";
+		};
 		F2A5F50820762115001BB94B = {
 			isa = PBXGroup;
 			children = (
+				AB78FD0624F8D98700C0DB07 /* H264lib */,
+				AB78FCF224F8D98700C0DB07 /* includes */,
+				AB78FCFD24F8D98700C0DB07 /* libs */,
 				AB6516D724B41EE9000EF54A /* LJWKeyboardHandler */,
-				AB52C14823FE7F6100C921F1 /* H264lib */,
-				F2A5F54E20763C92001BB94B /* c_and_c++_stub */,
-				F2A5F54B20762C90001BB94B /* includes */,
-				F2A5F54620762905001BB94B /* libs */,
 				F2A5F51320762115001BB94B /* test3 */,
 				F2A5F52C20762117001BB94B /* test3Tests */,
 				F2A5F53720762118001BB94B /* test3UITests */,
@@ -243,45 +270,6 @@
 				F2A5F53A20762118001BB94B /* Info.plist */,
 			);
 			path = test3UITests;
-			sourceTree = "<group>";
-		};
-		F2A5F54620762905001BB94B /* libs */ = {
-			isa = PBXGroup;
-			children = (
-				045CBE9C240BDDBF00AF4C9D /* libfaac.a */,
-				046891B0240119C200EA77B8 /* libIOTCAPIs_ALL.a */,
-				046891AF240119C200EA77B8 /* libIOTCAPIs_ALLT.a */,
-				046891B1240119C200EA77B8 /* libIOTCAPIs_P2PTunnel.a */,
-				046891B2240119C300EA77B8 /* libIOTCAPIs_P2PTunnelT.a */,
-				F2A5F54720762905001BB94B /* libFBP2P.a */,
-				045CBE9B240BDDBF00AF4C9D /* liblibgpac.a */,
-				F2A5F54820762905001BB94B /* libIPCNetManager.a */,
-			);
-			path = libs;
-			sourceTree = "<group>";
-		};
-		F2A5F54B20762C90001BB94B /* includes */ = {
-			isa = PBXGroup;
-			children = (
-				F2A5F54D20762C90001BB94B /* sepcam_protocal.h */,
-				AB4EFA5A23F65D6100D584E7 /* SEP2P_API.h */,
-				F2A5F55320775BE7001BB94B /* SEP2P_Type.h */,
-				F2A5F55420775BEE001BB94B /* SEP2P_Error.h */,
-				F2787DC82083619F00890A06 /* cJSON.h */,
-				F2787DC92083619F00890A06 /* JSONObject.hpp */,
-				F2787DC72083608300890A06 /* JSONStructProtocal.h */,
-				F2A5F54C20762C90001BB94B /* IPCNetManagerInterface.h */,
-			);
-			path = includes;
-			sourceTree = "<group>";
-		};
-		F2A5F54E20763C92001BB94B /* c_and_c++_stub */ = {
-			isa = PBXGroup;
-			children = (
-				F2A5F54F20763C92001BB94B /* c_plus_plus_stub.cpp */,
-				F2A5F55020763C92001BB94B /* c_stub.c */,
-			);
-			path = "c_and_c++_stub";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -422,13 +410,11 @@
 				AB6516E524B41EE9000EF54A /* UIViewController+LJWKeyboardHandlerHelper.m in Sources */,
 				AB6516E724B41EE9000EF54A /* LJWKeyboardHandler.m in Sources */,
 				F2A5F51920762115001BB94B /* ViewController.mm in Sources */,
-				F2A5F55220763C92001BB94B /* c_stub.c in Sources */,
 				AB6516E824B41EE9000EF54A /* UIWindow+LJWPresentViewController.m in Sources */,
 				AB6516E624B41EE9000EF54A /* LJWKeyboardToolBar.m in Sources */,
 				F2A5F52420762117001BB94B /* main.m in Sources */,
 				F2A5F51620762115001BB94B /* AppDelegate.m in Sources */,
 				AB6516E424B41EE9000EF54A /* UIView+LJWKeyboardHandlerAddtion.m in Sources */,
-				F2A5F55120763C92001BB94B /* c_plus_plus_stub.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -612,6 +598,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
+					"$(PROJECT_DIR)/test3",
+					"$(PROJECT_DIR)/H264lib",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
@@ -642,6 +630,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
+					"$(PROJECT_DIR)/test3",
+					"$(PROJECT_DIR)/H264lib",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";

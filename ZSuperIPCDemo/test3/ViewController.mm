@@ -48,6 +48,7 @@ IPCNetWifiAplist_st wifiListCfg;
     __weak IBOutlet UITextField *rebackView_Date;
     __weak IBOutlet UITextField *rebackView_Time;
     __weak IBOutlet UITextField *rebackView_Path;
+    __weak IBOutlet NSLayoutConstraint *replayViewCY;
 }
 @end
 
@@ -207,7 +208,7 @@ void OnSetQualityLevelCmdResult(int cmd,const char*uuid,const char*json)
     int ret1 = IPCNetStopIPCNetSession(textviewuuid.text.UTF8String);
     
     //int ret=IPCNetStartIPCNetSession(textviewuuid.text.UTF8String,"84567",&ipcnetHandle);
-    int ret=IPCNetStartIPCNetSession(textviewuuid.text.UTF8String,"admin",&ipcnetHandle);
+    int ret=IPCNetStartIPCNetSession(textviewuuid.text.UTF8String,"qq123456",&ipcnetHandle);
     NSLog(@"IPCNetStartIPCNetSession ret=%d",ret);
 }
 
@@ -243,18 +244,23 @@ void OnGetDeviceWiFi_CmdResult(int cmd,const char*uuid,const char*json)
     return body;
 }
 
-- (IBAction)playvideoBtn:(id)sender {
+#pragma mark -  开始播放
+- (IBAction)playvideoBtn:(id)sender
+{
     const char *uuid=[textviewuuid.text UTF8String];
     IPCNetStartVideo(uuid, 1);
 }
 
+#pragma mark -  Wi-Fi搜索
 - (IBAction)getDeviceWifi:(id)sender
 {
     int ret = IPCNetSearchWiFiR(textviewuuid.text.UTF8String, OnGetDeviceWiFi_CmdResult);
     NSLog(@"ret = %d",ret);
 }
 
-- (IBAction)stopvideoBtn:(id)sender {
+#pragma mark -  停止播放视频
+- (IBAction)stopvideoBtn:(id)sender
+{
     const char *uuid=[textviewuuid.text UTF8String];
     IPCNetStopVideo(uuid);
 }
@@ -279,20 +285,21 @@ void OnGetDeviceWiFi_CmdResult(int cmd,const char*uuid,const char*json)
     IPCNetStopAudio(uuid);
 }
 
-#pragma mark - 添加开始对讲代码
+#pragma mark - 开始对讲
+
 - (IBAction)startTalkBtn:(UIButton *)sender
 {
     if (!sender.selected) {
         sender.selected = YES;
         const char *uuid = [textviewuuid.text UTF8String];
-        NSLog(@"addStartTalkCode");
         NSLog(@"注意！！！！请先开启视频流，设备端才能播放声音！！！！！");
         IPCNetStartTalk(uuid, IPCNET_AUDIO_G711A);
         [recorder start];
     }
 }
 
-#pragma mark - 添加停止对讲代码
+#pragma mark - 停止对讲
+
 - (IBAction)stopTalkBtn:(UIButton *)sender
 {
     startTalkButton.selected = NO;
@@ -303,6 +310,7 @@ void OnGetDeviceWiFi_CmdResult(int cmd,const char*uuid,const char*json)
 }
 
 #pragma mark - 开始录屏
+
 - (IBAction)startRecordBtnAction:(id)sender
 {
     recordType = KHJLiveRecordType_Recording;
@@ -310,11 +318,14 @@ void OnGetDeviceWiFi_CmdResult(int cmd,const char*uuid,const char*json)
 }
 
 #pragma mark - 结束录屏
+
 - (IBAction)stopRecordBtnAction:(id)sender
 {
     recordType = KHJLiveRecordType_stopRecoding;
     recordVideoPath = [[self getTakeVideoDocPath_with_deviceID:@"deviceID"] stringByAppendingPathComponent:[self getVideoNameWithType:@"mp4" deviceID:@"deviceID"]];
 }
+
+#pragma mark - 录屏视频列表
 
 - (IBAction)getVideoList:(id)sender
 {
@@ -353,7 +364,10 @@ void OnGetOSDCmdResult(int cmd,const char*uuid,const char*json)
     IPCNetReleaseCmdResource( cmd, uuid,OnGetOSDCmdResult);
 }
 
-- (IBAction)GetOSDBtn:(id)sender {
+#pragma mark - 获取 OSD 参数
+
+- (IBAction)GetOSDBtn:(id)sender
+{
     String str;
     const char *uuid=[textviewuuid.text UTF8String];
     IPCNetGetOsdCfg_st ipcNetGetOsdCfg;
@@ -364,10 +378,13 @@ void OnGetOSDCmdResult(int cmd,const char*uuid,const char*json)
 void OnSetOSDCmdResult(int cmd,const char*uuid,const char*json)
 {
     NSLog(@"OnSetOSDCmdResult cmd:%d,uuid:%s,json:%s",cmd,uuid,json);
-    
     IPCNetReleaseCmdResource( cmd, uuid,OnSetOSDCmdResult);
 }
-- (IBAction)SetOSDBtn:(id)sender {
+
+#pragma mark - 设置 OSD 参数
+
+- (IBAction)SetOSDBtn:(id)sender
+{
     String str;
     const char *uuid=[textviewuuid.text UTF8String];
     mIPCNetOsdCfg.OsdNameInfo->NameText="camera name";
@@ -389,17 +406,26 @@ void OnGetAlarmCmdResult(int cmd,const char*uuid,const char*json)
     
     IPCNetReleaseCmdResource( cmd, uuid,OnGetAlarmCmdResult);
 }
-- (IBAction)GetAlarmBtn:(id)sender {
-    const char *uuid=[textviewuuid.text UTF8String];
-    IPCNetGetAlarmR( uuid,OnGetAlarmCmdResult);
+
+#pragma mark - 设置 OSD 参数
+
+- (IBAction)GetAlarmBtn:(id)sender
+{
+    const char *uuid = [textviewuuid.text UTF8String];
+    IPCNetGetAlarmR(uuid,OnGetAlarmCmdResult);
 }
+
 void OnSetAlarmCmdResult(int cmd,const char*uuid,const char*json)
 {
     NSLog(@"OnSetAlarmCmdResult cmd:%d,uuid:%s,json:%s",cmd,uuid,json);
     
     IPCNetReleaseCmdResource( cmd, uuid,OnSetAlarmCmdResult);
 }
-- (IBAction)SetAlarmBtn:(id)sender {
+
+#pragma mark - 设置报警信息
+
+- (IBAction)SetAlarmBtn:(id)sender
+{
     String str;
     const char *uuid=[textviewuuid.text UTF8String];
     
@@ -430,12 +456,6 @@ void OnSetAlarmCmdResult(int cmd,const char*uuid,const char*json)
     IPCNetSetAlarmR( uuid,str.data(),OnSetAlarmCmdResult);
 }
 
-
-void OnSearchDeviceResult(struct DevInfo*dev);
-- (IBAction)searchBtn:(id)sender {
-    IPCNetSearchDevice(OnSearchDeviceResult);
-}
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -446,7 +466,7 @@ void OnSearchDeviceResult(struct DevInfo*dev);
     [super viewWillAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onStatus:) name:@"onStatus" object:nil];
 }
-
+// P2P_STATUS_SUCCESSFUL
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
@@ -463,13 +483,13 @@ void OnSearchDeviceResult(struct DevInfo*dev);
     dispatch_async(dispatch_get_main_queue(), ^{
     NSLog(@"onStatus uuid:%@ status:%d",uuid,status);
     switch (status) {
-       case P2P_STATUS_SUCCESSFUL:{
+       case 0:{
            [self->statusLabel setText:@"online"];
         }break;
-        case P2P_STATUS_TIME_OUT:{
+        case 2:{
             [self->statusLabel setText:@"timeout"];
         }break;
-        case P2P_STATUS_INVALID_ID:{
+        case 3:{
             [self->statusLabel setText:@"INVALID ID"];
         }break;
         default:
@@ -547,15 +567,26 @@ void onAudioData(const char* uuid,int type,unsigned char*data,int len,long times
         gVideoRecordSession = NULL;
     }
 }
+
 void onJSONString(const char* uuid,int msg_type,const char* jsonstr)
 {
     NSLog(@"uuid:%s msg:%d json:%s",uuid,msg_type,jsonstr);
 }
+
 void OnSearchDeviceResult(struct DevInfo*dev)
 {
     NSLog(@"OnSearchDeviceResult uuid:%s ip:%s",dev->mUUID,dev->mIP);
 }
 
+
+void OnSearchDeviceResult(struct DevInfo*dev);
+
+#pragma mark - 搜索周围设备
+
+- (IBAction)searchBtn:(id)sender
+{
+    IPCNetSearchDevice(OnSearchDeviceResult);
+}
 
 // 直播录屏保存地址
 - (NSString *)getTakeVideoDocPath_with_deviceID:(NSString *)deviceID
@@ -638,6 +669,9 @@ void OnSearchDeviceResult(struct DevInfo*dev)
 - (IBAction)rebackAction:(id)sender
 {
     rebackView.alpha = 1;
+    [UIView animateWithDuration:0.25 animations:^{
+        self->replayViewCY.constant = 0;
+    }];
 }
 
 - (IBAction)cancel:(UIButton *)sender
@@ -663,6 +697,9 @@ void OnSearchDeviceResult(struct DevInfo*dev)
     }
     else {
         rebackView.alpha = 0;
+        [UIView animateWithDuration:0.25 animations:^{
+            self->replayViewCY.constant = -250;
+        }];
         int ret = IPCNetStopPlaybackR(rebackView_ID.text.UTF8String, OnGetStopPlaybackCmdResult);
         NSLog(@"停止视频回放stopPlayback_with_deviceID，ret = %d",ret);
     }
@@ -698,6 +735,85 @@ void OnSetPlaybackAudioVideoDataCallBackCmdResult(const char*uuid,int type,unsig
     }
 }
 
+#pragma mark - 下载报警图片
+
+- (IBAction)downloadAlarmPic:(id)sender
+{
+    NSString *deviceID = @"IPCKF0001M7WAFQK";
+    NSString *fileName = @"/mnt/s0/pic/vi0/202010/17/11/5222.md.*";
+    NSString *path = @"/var/mobile/Containers/Data/Application/4EC3FAC8-C01D-4265-900D-EFCFB4B564C5/Documents/AlarmPic/IPCKF0001M7WAFQK/2020-10-17_115158.*";
+    [self downloadPicWith:deviceID fileName:fileName path:path];
+}
+
+- (void)downloadPicWith:(NSString *)deviceID fileName:(NSString *)fileName path:(NSString *)path
+{
+#pragma mark - 文件传输协议
+    int ret1 = IPCNetGetFileFromDevice(deviceID.UTF8String, fileName.UTF8String, path.UTF8String, OnGetFileFromDeviceCmdResult);
+#pragma mark - 注册文件传输回调
+    int ret2 = IPCNetSetFileTransferProgressCallback(deviceID.UTF8String, OnGetFileTransferProgressCallbackCmdResult);
+    NSLog(@"文件传输协议 IPCNetGetFileFromDevice，ret1 = %d，ret2 = %d",ret1,ret2);
+}
+
+void OnGetFileFromDeviceCmdResult(int cmd,const char*uuid,const char*json)
+{
+    NSLog(@"OnGetFileFromDeviceCmdResult %s cmd:%d uuid:%s json:%s\n",__func__,cmd, uuid, json);
+    NSDictionary *dict = [ViewController cString_changto_ocStringWith1:json];
+    NSLog(@"dict = %@",dict);
+    int ret = [dict[@"FileTransfer"][@"Transfer.Get"][@"Ret"] intValue];
+    if (ret < 0) {
+        NSLog(@"图片下载失败");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"TTDownloadFailedAlarmPicFromDevice_Key" object:nil];
+        });
+    }
+}
+
++ (NSDictionary *)cString_changto_ocStringWith1:(const char *)cString
+{
+    NSString *json = [[NSString alloc] initWithUTF8String:cString];
+    if (json == nil) {
+        json = [NSString stringWithFormat:@"%s",cString];
+        if ([json isEqualToString:@""]) {
+            return nil;
+        }
+        NSData *jsonData    = [json dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *body  = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+        return body;
+    }
+    NSData *jsonData    = [json dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *body  = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+    return body;
+}
+
+void OnGetFileTransferProgressCallbackCmdResult(int sor, const char*uuid,const char *file, int progress, int transferedSize)
+{
+    NSLog(@"OnSetDeviceIndicatorCmdResult %s sor:%d uuid:%s file:%s progress:%d transferedSize:%d\n",__func__,sor, uuid, file, progress, transferedSize);
+    
+    if (progress >= 100) {
+//        NSString *fileName = TTStr(@"%s",file);
+//        if ([fileName containsString:@"jpg"]) {
+//            TLog(@"jpg 图片");
+//        }
+//        else if ([fileName containsString:@"i265"]) {
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                NSString *newFilePath = [fileName stringByReplacingOccurrencesOfString:@"i265" withString:@"jpg"];
+//                [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadAlarmPic_Noti" object:@[fileName, newFilePath, @"36"]];
+//                TLog(@"265 图片");
+//            });
+//        }
+//        else if ([fileName containsString:@"i264"]) {
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                NSString *newFilePath = [fileName stringByReplacingOccurrencesOfString:@"i264" withString:@"jpg"];
+//                [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadAlarmPic_Noti" object:@[fileName, newFilePath, @"35"]];
+//                TLog(@"264 图片");
+//            });
+//        }
+    }
+    NSLog(@"图片下载 progress = %d%% ",progress);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"TTDownloadAlarmPicFromDevice_Key" object:@(progress)];
+    });
+}
 
 @end
 
